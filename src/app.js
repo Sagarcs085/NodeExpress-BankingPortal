@@ -9,6 +9,34 @@ app.set('view engine','ejs');
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.get('/',(req,res)=> res.render('index',{'title':'Index'}));
+const accountsData = fs.readFileSync(
+                        path.join(__dirname,'json','accounts.json'),'utf8'
+                        );
+const accounts = JSON.parse(accountsData);
+
+const usersData = fs.readFileSync(
+                        path.join(__dirname,'json','users.json'),'utf8'
+                        );
+const users = JSON.parse(usersData);
+
+
+app.get('/',(req,res)=> {res.render('index',{'title':'Accounts Summary',accounts});
+});
+
+app.get('/savings',(req,res) => {
+    res.render('account',{account:accounts.savings});
+});
+
+app.get('/checking',(req,res)=> {
+    res.render('account',{account:accounts.checking});
+});
+
+app.get('/credit',(req,res)=>{
+    res.render('account',{account:accounts.credit});
+});
+
+app.get('/profile',(req,res)=>{
+    res.render('profile',{user:users[0]});
+})
 
 app.listen(3000, () => console.log('BP Project running on 3000!'));
